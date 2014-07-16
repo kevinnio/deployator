@@ -1,0 +1,10 @@
+{
+  "hellocat": {
+    "provider": "heroku",
+    "auto_merge": false,
+    "repository": "kevindperezm/hellocat",
+    "environments": ["production"],
+
+    "heroku_production_name": "hellocat"
+  }
+}
