@@ -1,1 +1,1 @@
-web: bin/hubot --adapter Slack -n deploybot
+web: bin/hubot --adapter slack -n deploybot
