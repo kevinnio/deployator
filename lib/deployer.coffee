@@ -15,6 +15,12 @@ class Deployer
     @checkGithubUserAccess (access, err) =>
       if access then @checkForNextAccess(cb) else cb(false, err)
 
+  branchExists: (branch, cb) ->
+    path = "/repos/#{@githubUser}/#{@githubRepo}/git/refs/heads/#{branch}"
+    https.get @githubOptions(path), (res) =>
+      err = "Looks like branch '#{branch}' doesn't exists!"
+      @checkForStatus(res, 200, err, cb)
+
   checkForNextAccess: (cb) ->
     @checkGithubRepoAccess (access, err) =>
       if access then @checkForLastAccess(cb) else cb(false, err)
