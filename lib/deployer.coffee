@@ -12,16 +12,16 @@ class Deployer
     cb('Work in process!')
 
   checkGithubUserAccess: (cb) ->
-    https.get @githubOptions('/user'), (res) ->
-      cb(res.statusCode == 200)
+    https.get @githubOptions('/user'), (res) =>
+      @checkForStatus res, 200, "Can't access GitHub user data!", cb
 
   checkGithubRepoAccess: (cb) ->
-    https.get @githubOptions("/repos/#{@githubUser}/#{@githubRepo}"), (res) ->
-      cb(res.statusCode == 200)
+    https.get @githubOptions("/repos/#{@githubUser}/#{@githubRepo}"), (res) =>
+      @checkForStatus res, 200, "Can't access GitHub repo data!", cb
 
   checkHerokuAccess: (cb) ->
-    https.get @herokuOptions("/apps/#{@herokuApp}"), (res) ->
-      cb (res.statusCode == 200)
+    https.get @herokuOptions("/apps/#{@herokuApp}"), (res) =>
+      @checkForStatus res, 200, "Can't access Heroku app data!", cb
 
   githubOptions: (path) ->
     headers = {
@@ -36,6 +36,9 @@ class Deployer
       'Authorization': "Bearer #{@herokuToken}"
     }
     @options 'api.heroku.com', path, headers
+
+  checkForStatus: (res, status, err, cb) ->
+    if res.statusCode == status then cb(true) else cb(false, err)
 
   options: (hostname, path, headers) ->
     headers['User-Agent'] = 'hubot'
