@@ -5,20 +5,44 @@ class GithubAdapter
     @user = opts.user
     @repo = opts.repo
     @token = opts.token
+    @messages = {
+      genericError: "whoa! there was an unknown error at GitHub side. rlly srry",
+      noUserAccess: "seems I'm not allowed to access #{@user} GitHub account. srry",
+      noRepoAccess: "seems I'm not allowed to access to GitHub repo #{@repo}. srry",
+      noBranch1: "whoa! there's no branch '",
+      noBranch2: "' at #{@repo} repo!"
+    }
 
   checkUserAccess: (cb) ->
     https.get @request('/user'), (res) =>
-      @checkForStatus res, 200, "Can't access GitHub user data!", cb
+      switch res.statusCode
+        when 200
+          cb true
+        when 401
+          cb false, @messages.noUserAccess
+        else
+          cb false, @messages.genericError
 
   checkRepoAccess: (cb) ->
     https.get @request("/repos/#{@user}/#{@repo}"), (res) =>
-      @checkForStatus res, 200, "Can't access GitHub repo data!", cb
-
+      switch res.statusCode
+        when 200
+          cb true
+        when 401
+          cb false, @messages.noRepoAccess
+        else
+          cb false, @messages.genericError
+        
   branchExists: (branch, cb) ->
     path = "/repos/#{@user}/#{@repo}/git/refs/heads/#{branch}"
     https.get @request(path), (res) =>
-      err = "Looks like branch '#{branch}' doesn't exists!"
-      @checkForStatus(res, 200, err, cb)
+      switch res.statusCode
+        when 200
+          cb true
+        when 401
+          cb false, "#{@messages.noBranch1} #{branch} #{@messages.noBranch2}"
+        else
+          cb false, @messages.genericError  
 
   request: (path) ->
     {

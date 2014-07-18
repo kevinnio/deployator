@@ -30,13 +30,13 @@ describe 'The Github adapter', ->
       it 'github user', (done) ->
         badAdapter.checkUserAccess (access, err) ->
           expect(access).toBe false
-          expect(err).toEqual "Can't access GitHub user data!"
+          expect(err).toBeTruthy()
           done()
 
       it 'github repo', (done) ->
         badAdapter.checkRepoAccess (access, err) ->
           expect(access).toBe false
-          expect(err).toEqual "Can't access GitHub repo data!"
+          expect(err).toBeTruthy()
           done()
 
   describe 'when trying to access a github repo branch', ->
@@ -46,8 +46,7 @@ describe 'The Github adapter', ->
         done()
 
     it 'returns an error message if it not exists', (done) ->
-      expected_err = "Looks like branch 'non-existing-branch' doesn't exists!"
       adapter.branchExists 'non-existing-branch', (exists, err) ->
         expect(exists).toBe false
-        expect(err).toEqual expected_err
+        expect(err).toBeTruthy()
         done()
