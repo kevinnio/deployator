@@ -9,6 +9,11 @@ class HerokuAdapter
     https.get @request("/apps/#{@app}"), (res) =>
       @checkForStatus res, 200, "Can't access Heroku app data!", cb
 
+  appExists: (app, cb) ->
+    https.get @request("/apps/#{app}"), (res) =>
+      err = "Whoops! There's no '#{app}' hosted at Heroku!"
+      @checkForStatus res, 200, err, cb
+
   request: (path) ->
     {
       hostname: 'api.heroku.com',
