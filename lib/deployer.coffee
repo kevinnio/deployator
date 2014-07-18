@@ -2,6 +2,8 @@ https = require 'https'
 
 class Deployer
   constructor: (opts) ->
+    @githubUser = opts.githubUser
+    @githubRepo = opts.githubRepo
     @githubToken = opts.githubToken
 
   deploy: (cb) ->
@@ -9,6 +11,10 @@ class Deployer
 
   checkGithubUserAccess: (cb) ->
     https.get @githubOptions('/user'), (res) ->
+      cb(res.statusCode == 200)
+
+  checkGithubRepoAccess: (cb) ->
+    https.get @githubOptions("/repos/#{@githubUser}/#{@githubRepo}"), (res) ->
       cb(res.statusCode == 200)
 
   githubOptions: (path) ->
