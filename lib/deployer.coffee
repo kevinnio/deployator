@@ -11,6 +11,18 @@ class Deployer
   deploy: (cb) ->
     cb('Work in process!')
 
+  checkForRequiredAccess: (cb) ->
+    @checkGithubUserAccess (access, err) =>
+      if access then @checkForNextAccess(cb) else cb(false, err)
+
+  checkForNextAccess: (cb) ->
+    @checkGithubRepoAccess (access, err) =>
+      if access then @checkForLastAccess(cb) else cb(false, err)
+
+  checkForLastAccess: (cb) ->
+    @checkHerokuAccess (access, err) =>
+      if access then cb(true) else cb(false, err)
+
   checkGithubUserAccess: (cb) ->
     https.get @githubOptions('/user'), (res) =>
       @checkForStatus res, 200, "Can't access GitHub user data!", cb
