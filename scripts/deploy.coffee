@@ -5,6 +5,10 @@
 #   hubot deploy - deploys a GitHub repo to Heroku
 #
 
+Deployer = require '../lib/deployer'
+
 module.exports = (robot) ->
   robot.respond /(deploy)/i, (mssg) ->
-    mssg.send 'Work in progress!'
+    deployer = new Deployer
+    deployer.deploy (message) ->
+      mssg.send(message)
