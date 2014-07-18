@@ -5,6 +5,8 @@ class Deployer
     @githubUser = opts.githubUser
     @githubRepo = opts.githubRepo
     @githubToken = opts.githubToken
+    @herokuApp = opts.herokuApp
+    @herokuToken = opts.herokuToken
 
   deploy: (cb) ->
     cb('Work in process!')
@@ -25,6 +27,20 @@ class Deployer
         'Accept': 'application/vnd.github.v3+json',
         'Authorization': "token #{@githubToken}",
         'User-Agent': 'hubot'
+      }
+    }
+
+  checkHerokuAccess: (cb) ->
+    https.get @herokuOptions("/apps/#{@herokuApp}"), (res) ->
+      cb (res.statusCode == 200)
+
+  herokuOptions: (path) ->
+    {
+      hostname: 'api.heroku.com',
+      path: path,
+      headers: {
+        'Accept': 'application/vnd.heroku+json; version=3',
+        'Authorization': "Bearer #{@herokuToken}"
       }
     }
 
