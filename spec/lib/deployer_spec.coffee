@@ -55,3 +55,8 @@ describe 'The Deployer class', ->
           expect(access).toBe false
           done()
 
+   it 'checks if a submitted branch exists in the github repo', (done)->
+      deployer.branchExists 'add-cool-feature', (exists, err) ->
+        expect(exists).toBe true
+        done()
+
