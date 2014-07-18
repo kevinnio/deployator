@@ -8,4 +8,3 @@
 module.exports = (robot) ->
   robot.respond /(deploy)/i, (mssg) ->
     mssg.send 'Work in progress!'
-
