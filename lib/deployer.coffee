@@ -19,29 +19,30 @@ class Deployer
     https.get @githubOptions("/repos/#{@githubUser}/#{@githubRepo}"), (res) ->
       cb(res.statusCode == 200)
 
-  githubOptions: (path) ->
-    {
-      hostname: 'api.github.com',
-      path: path,
-      headers: {
-        'Accept': 'application/vnd.github.v3+json',
-        'Authorization': "token #{@githubToken}",
-        'User-Agent': 'hubot'
-      }
-    }
-
   checkHerokuAccess: (cb) ->
     https.get @herokuOptions("/apps/#{@herokuApp}"), (res) ->
       cb (res.statusCode == 200)
 
+  githubOptions: (path) ->
+    headers = {
+      'Accept': 'application/vnd.github.v3+json',
+      'Authorization': "token #{@githubToken}"
+    }
+    @options 'api.github.com', path, headers
+
   herokuOptions: (path) ->
+    headers = {
+      'Accept': 'application/vnd.heroku+json; version=3',
+      'Authorization': "Bearer #{@herokuToken}"
+    }
+    @options 'api.heroku.com', path, headers
+
+  options: (hostname, path, headers) ->
+    headers['User-Agent'] = 'hubot'
     {
-      hostname: 'api.heroku.com',
+      hostname: hostname,
       path: path,
-      headers: {
-        'Accept': 'application/vnd.heroku+json; version=3',
-        'Authorization': "Bearer #{@herokuToken}"
-      }
+      headers: headers
     }
 
 # ----------------------- #
