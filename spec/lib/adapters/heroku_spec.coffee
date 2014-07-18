@@ -22,7 +22,7 @@ describe 'The Heroku adapter', ->
       it 'heroku app', (done) ->
         badAdapter.checkAccess (access, err) ->
           expect(access).toBe false
-          expect(err).toEqual "Can't access Heroku app data!"
+          expect(err).toEqual "seems I'm not allowed to go into hellocat! srry"
           done()
 
   describe 'can tell if a Heroku app', ->
@@ -32,9 +32,9 @@ describe 'The Heroku adapter', ->
         done()
 
     it "doesn't exists", ->
-      appName = 'hopefully-non-existent-app'
-      adapter.appExists appName, (exists, err) ->
+      app = 'hopefully-non-existent-app'
+      adapter.appExists app, (exists, err) ->
         expect(exists).toBe false
-        expect(err).toEqual "Whoops! There's no '#{appName}' hosted at Heroku!"
+        expect(err).toEqual "wait! there's no '#{app}' app hosted at Heroku!"
         done()
 
