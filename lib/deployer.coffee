@@ -1,10 +1,9 @@
 https = require 'https'
+GithubAdapter = require './adapters/github'
 
 class Deployer
   constructor: (opts) ->
-    @githubUser = opts.githubUser
-    @githubRepo = opts.githubRepo
-    @githubToken = opts.githubToken
+    @githubAdapter = opts.githubAdapter
     @herokuApp = opts.herokuApp
     @herokuToken = opts.herokuToken
 
@@ -12,41 +11,20 @@ class Deployer
     cb('Work in process!')
 
   checkForRequiredAccess: (cb) ->
-    @checkGithubUserAccess (access, err) =>
+    @githubAdapter.checkUserAccess (access, err) =>
       if access then @checkForNextAccess(cb) else cb(false, err)
 
-  branchExists: (branch, cb) ->
-    path = "/repos/#{@githubUser}/#{@githubRepo}/git/refs/heads/#{branch}"
-    https.get @githubOptions(path), (res) =>
-      err = "Looks like branch '#{branch}' doesn't exists!"
-      @checkForStatus(res, 200, err, cb)
-
   checkForNextAccess: (cb) ->
-    @checkGithubRepoAccess (access, err) =>
+    @githubAdapter.checkRepoAccess (access, err) =>
       if access then @checkForLastAccess(cb) else cb(false, err)
 
   checkForLastAccess: (cb) ->
     @checkHerokuAccess (access, err) =>
       if access then cb(true) else cb(false, err)
 
-  checkGithubUserAccess: (cb) ->
-    https.get @githubOptions('/user'), (res) =>
-      @checkForStatus res, 200, "Can't access GitHub user data!", cb
-
-  checkGithubRepoAccess: (cb) ->
-    https.get @githubOptions("/repos/#{@githubUser}/#{@githubRepo}"), (res) =>
-      @checkForStatus res, 200, "Can't access GitHub repo data!", cb
-
   checkHerokuAccess: (cb) ->
     https.get @herokuOptions("/apps/#{@herokuApp}"), (res) =>
       @checkForStatus res, 200, "Can't access Heroku app data!", cb
-
-  githubOptions: (path) ->
-    headers = {
-      'Accept': 'application/vnd.github.v3+json',
-      'Authorization': "token #{@githubToken}"
-    }
-    @options 'api.github.com', path, headers
 
   herokuOptions: (path) ->
     headers = {
