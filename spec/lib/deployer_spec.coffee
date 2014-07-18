@@ -6,28 +6,45 @@ options = {
   herokuApp: 'hellocat',
   herokuToken: 'fc87fa24-4d8d-4073-94ca-4c0d09649e75'
 }
+badOptions = {
+  githubUser: 'kevindperezm',
+  githubRepo: 'hellocat',
+  githubToken: 'fakeToken',
+  herokuApp: 'hellocat',
+  herokuToken: 'fakeToken2'
+}
 deployer = new Deployer(options)
+badDeployer = new Deployer(badOptions)
 
 describe 'The Deployer class', ->
   it 'has a deploy method', ->
     expect(deployer.deploy).toBeDefined()
 
-  expectSuccessfulAccess = (access, err) ->
-    expect(err).toBeUndefined()
-    expect(access).toBe true
+  describe 'checks correctly for', ->
+    it 'github user access', (done) ->
+      deployer.checkGithubUserAccess (access, err) ->
+        expect(access).toBe true
 
-  it 'checks for github user access', (done) ->
-    deployer.checkGithubUserAccess (access, err) ->
-      expectSuccessfulAccess(access, err)
-      done()
+      badDeployer.checkGithubUserAccess (access, err) ->
+        expect(access).toBe false
+        expect(err).toEqual "Can't access GitHub user data!"
+        done()
 
-  it 'checks for github repo access', (done) ->
-    deployer.checkGithubRepoAccess (access, err) ->
-      expectSuccessfulAccess(access, err)
-      done()
+    it 'github repo access', (done) ->
+      deployer.checkGithubRepoAccess (access, err) ->
+        expect(access).toBe true
 
-  it 'checks for heroku app access', (done) ->
-    deployer.checkHerokuAccess (access, err) ->
-      expectSuccessfulAccess(access, err)
-      done()
+      badDeployer.checkGithubRepoAccess (access, err) ->
+        expect(access).toBe false
+        expect(err).toEqual "Can't access GitHub repo data!"
+        done()
+
+    it 'heroku app access', (done) ->
+      deployer.checkHerokuAccess (access, err) ->
+        expect(access).toBe true
+
+      badDeployer.checkHerokuAccess (access, err) ->
+        expect(access).toBe false
+        expect(err).toEqual "Can't access Heroku app data!"
+        done()
 
