@@ -55,8 +55,16 @@ describe 'The Deployer class', ->
           expect(access).toBe false
           done()
 
-  it 'checks if a submitted branch exists in the github repo', (done)->
-    deployer.branchExists 'add-cool-feature', (exists, err) ->
-      expect(exists).toBe true
-      done()
+  describe 'when trying to access a github repo branch', ->
+    it 'checks if it exists', (done)->
+      deployer.branchExists 'add-cool-feature', (exists, err) ->
+        expect(exists).toBe true
+        done()
+
+    it 'returns an error message when it not exists', (done) ->
+      expected_err = "Looks like branch 'non-existing-branch' doesn't exists!"
+      deployer.branchExists 'non-existing-branch', (exists, err) ->
+        expect(exists).toBe false
+        expect(err).toEqual expected_err
+        done()
 
