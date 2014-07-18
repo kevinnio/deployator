@@ -48,3 +48,11 @@ describe 'The Deployer class', ->
         expect(err).toEqual "Can't access Heroku app data!"
         done()
 
+    it 'both GitHub and Heroku access within a single method', (done) ->
+      deployer.checkForRequiredAccess (access, err) ->
+        expect(access).toBe true
+
+      badDeployer.checkForRequiredAccess (access, err) ->
+        expect(access).toBe false
+        done()
+
