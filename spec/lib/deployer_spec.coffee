@@ -10,15 +10,17 @@ describe 'The Deployer class', ->
   it 'has a deploy method', ->
     expect(deployer.deploy).toBeDefined()
 
+  expectSuccessfulAccess = (access, err) ->
+    expect(err).toBeUndefined()
+    expect(access).toBe true
+
   it 'checks for github user access', (done) ->
     deployer.checkGithubUserAccess (access, err) ->
-      expect(err).toBeUndefined()
-      expect(access).toBe true
+      expectSuccessfulAccess(access, err)
       done()
 
   it 'checks for github repo access', (done) ->
     deployer.checkGithubRepoAccess (access, err) ->
-      expect(err).toBeUndefined()
-      expect(access).toBe true
+      expectSuccessfulAccess(access, err)
       done()
 
