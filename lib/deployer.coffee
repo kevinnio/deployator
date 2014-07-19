@@ -6,8 +6,9 @@ class Deployer
     @githubAdapter = opts.githubAdapter
     @herokuToken = opts.herokuToken
 
-  deploy: (cb) ->
-    cb('Work in process!')
+  deploy: (repo, branch, environment, cb) ->
+    @checkForRequiredAccess =>
+      @do_deploy(branch, environment, cb)
 
   checkForRequiredAccess: (cb) ->
     @githubAdapter.checkUserAccess (access, err) =>
@@ -20,6 +21,11 @@ class Deployer
   checkForLastAccess: (cb) ->
     @herokuAdapter.checkAccess (access, err) =>
       if access then cb(true) else cb(false, err)
+
+  do_deploy: (branch, env, cb) ->
+    mssg = "Deploy requested: Send #{@githubAdapter.repo}/#{branch} to #{env}"
+    console.log mssg
+    cb(true)
 
 # ----------------------- #
 
