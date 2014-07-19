@@ -31,7 +31,7 @@ describe 'The Heroku adapter', ->
         expect(exists).toBe true
         done()
 
-    it "doesn't exists", ->
+    it "doesn't exists", (done) ->
       app = 'hopefully-non-existent-app'
       adapter.appExists app, (exists, err) ->
         expect(exists).toBe false
