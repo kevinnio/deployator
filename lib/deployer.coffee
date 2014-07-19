@@ -4,7 +4,7 @@ GithubAdapter = require './adapters/github'
 class Deployer
   constructor: (opts = {}) ->
     @githubAdapter = opts.githubAdapter
-    @herokuToken = opts.herokuToken
+    @herokuAdapter = opts.herokuAdapter
 
   deploy: (repo, branch, environment, cb) ->
     @checkForRequiredAccess =>
