@@ -1,5 +1,5 @@
-GithubAdapter = '../../lib/adapter/github_dummy'
-HerokuAdapter = '../../lib/adapter/heroku_dummy'
+GithubAdapter = require '../../lib/adapters/github_dummy'
+HerokuAdapter = require '../../lib/adapters/heroku_dummy'
 Deployer = require '../../lib/deployer'
 
 githubAdapter = new GithubAdapter({
@@ -22,6 +22,7 @@ describe 'The Deployer class', ->
     expect(deployer.deploy).toBeDefined()
 
   it 'deploys a branch to a heroku app', (done) ->
-    deployer.deploy 'add-cool-feature', 'production', (success, err) ->
+    deployer.deploy 'hellocat', 'add-cool-feature', 'production', (success, err) ->
       expect(success).toBe true
+      done()
 
