@@ -2,8 +2,7 @@ https = require 'https'
 
 class HerokuAdapter
   constructor: (opts) ->
-    @app = opts.app
-    @token = opts.token
+    @environments = opts.environments
     @messages = {
       genericError: "whoa! there was an unknown error at Heroku side. rlly srry"
       accessDenied: "seems I'm not allowed to go into #{@app}! srry",

@@ -42,7 +42,7 @@ class GithubAdapter
         when 401
           cb false, "#{@messages.noBranch1} #{branch} #{@messages.noBranch2}"
         else
-          cb false, @messages.genericError  
+          cb false, @messages.genericError
 
   request: (path) ->
     {
