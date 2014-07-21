@@ -26,13 +26,21 @@ buildDeployables = (deployables) ->
     origin = originAdapter(data.origin.adapter, data.origin)
     target = targetAdapter(data.target.adapter, data.target)
     result.push new Deployable(name, origin, target, data)
-  result
+  addMethods result
 
 originAdapter = (klass, data) ->
   buildAdapter('origin', klass, data)
 
 targetAdapter = (klass, data) ->
   buildAdapter('target', klass, data)
+
+addMethods = (array) ->
+  array.find = (name) ->
+    found = false
+    for deployable in array
+      found = deployable if deployable.name == name
+    found
+  array
 
 buildAdapter = (type, klass, data) ->
   Adapter = require("./adapters/#{type}/#{klass}.coffee")
