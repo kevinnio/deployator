@@ -9,14 +9,14 @@ class GithubAdapter
       genericError: "whoa! there was an unknown error at GitHub side. rlly srry",
       noUserAccess: "seems I'm not allowed to access #{@user} GitHub account. srry",
       noRepoAccess: "seems I'm not allowed to access to GitHub repo #{@repo}. srry",
-      noBranch1: "whoa! there's no branch '",
-      noBranch2: "' at #{@repo} repo!",
+      noBranch1: "whoa! there's no branch",
+      noBranch2: "at #{@repo} repo!",
       noTarballURL: "sorry but I can't get the tarball url for branch"
     }
 
   checkAccess: (cb) ->
-    @checkUserAccess =>
-      @checkRepoAccess cb
+    @checkUserAccess (success, err) =>
+      if success then @checkRepoAccess(cb) else cb(false, err)
 
   branchExists: (branch, cb) ->
     path = "/repos/#{@user}/#{@repo}/git/refs/heads/#{branch}"
@@ -25,7 +25,7 @@ class GithubAdapter
         when 200 # OK
           cb true
         when 404 # Not Found
-          cb false, "#{@messages.noBranch1} #{branch} #{@messages.noBranch2}"
+          cb false, "#{@messages.noBranch1} '#{branch}' #{@messages.noBranch2}"
         else
           cb false, @messages.genericError
 
