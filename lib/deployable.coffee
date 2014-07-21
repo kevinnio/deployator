@@ -9,16 +9,16 @@ class Deployable
 # ----------------- #
 
 Deployable.loadFile = (file, cb) ->
-  fs.readFile file, 'utf8', (err, contents) ->
-    if err
-      # con error
-    else
-      deployables = []
-      try
-        deployables = buildDeployables JSON.parse(contents)
-      catch err
-        console.log err
-      cb(deployables)
+  contents = fs.readFileSync file, 'utf8'
+  if contents
+    deployables = []
+    try
+      deployables = buildDeployables JSON.parse(contents)
+    catch err
+      console.log err
+  else
+    # Error
+  deployables
 
 buildDeployables = (deployables) ->
   result = []
