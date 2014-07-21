@@ -10,7 +10,7 @@ class HerokuAdapter
     }
 
   checkAccess: (env, cb) ->
-    env = @environments[env]
+    env = @getEnv(env)
     https.get @request(env, "/apps/#{env.app}"), (res) =>
       switch res.statusCode
         when 200 # OK
@@ -21,7 +21,7 @@ class HerokuAdapter
           cb false, @messages.genericError
 
   appExists: (env, cb) ->
-    env = @environments[env]
+    env = @getEnv(env)
     https.get @request(env, "/apps/#{env.app}"), (res) =>
       switch res.statusCode
         when 200 # OK
@@ -32,7 +32,7 @@ class HerokuAdapter
           cb false, @messages.genericError
 
   deploy: (env, tarballURL, cb) ->
-    env = @environments[env]
+    env = @getEnv(env)
     request = https.request @deployOpts(env), (res) =>
       switch res.statusCode
         when 201 # Created
@@ -41,6 +41,12 @@ class HerokuAdapter
           cb false, @messages.genericError
     request.write JSON.stringify(@deployBody(tarballURL))
     request.end()
+
+  getEnv: (name) ->
+    if @environments[name]
+      @environments[name]
+    else
+      throw InvalidEnvError("No such environment '#{name}'")
 
   deployOpts: (env) ->
     opts = @request(env, "/apps/#{env.app}/builds")
