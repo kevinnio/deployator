@@ -8,3 +8,8 @@ describe 'The Deployable class', ->
       expect(deployableList.length).toBeGreaterThan 0
       done()
 
+  it 'adds some singleton methods to deployables array', (done) ->
+    Deployable.loadFile 'spec/deployables.json', (deployables) ->
+      deployableList = deployables
+      expect(deployableList.find).toBeDefined()
+      done()
