@@ -65,9 +65,6 @@ class HerokuAdapter
       }
     }
 
-  checkForStatus: (res, status, err, cb) ->
-    if res.statusCode == status then cb(true) else cb(false, err)
-
 # ---------------------- #
 
 module.exports = HerokuAdapter
