@@ -13,6 +13,28 @@ class GithubAdapter
       noBranch2: "' at #{@repo} repo!"
     }
 
+  checkAccess: (cb) ->
+    @checkUserAccess =>
+      @checkRepoAccess cb
+
+  branchExists: (branch, cb) ->
+    path = "/repos/#{@user}/#{@repo}/git/refs/heads/#{branch}"
+    https.get @request(path), (res) =>
+      switch res.statusCode
+        when 200
+          cb true
+        when 401
+          cb false, "#{@messages.noBranch1} #{branch} #{@messages.noBranch2}"
+        else
+          cb false, @messages.genericError
+
+  getTarballURL: (cb) ->
+    cb('http://some-tarball-url.com')
+
+  # --------------------------- #
+  # Private methods             #
+  # --------------------------- #
+
   checkUserAccess: (cb) ->
     https.get @request('/user'), (res) =>
       switch res.statusCode
@@ -30,17 +52,6 @@ class GithubAdapter
           cb true
         when 401
           cb false, @messages.noRepoAccess
-        else
-          cb false, @messages.genericError
-        
-  branchExists: (branch, cb) ->
-    path = "/repos/#{@user}/#{@repo}/git/refs/heads/#{branch}"
-    https.get @request(path), (res) =>
-      switch res.statusCode
-        when 200
-          cb true
-        when 401
-          cb false, "#{@messages.noBranch1} #{branch} #{@messages.noBranch2}"
         else
           cb false, @messages.genericError
 
