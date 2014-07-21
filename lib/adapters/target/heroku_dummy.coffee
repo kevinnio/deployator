@@ -3,22 +3,23 @@ APPS = ['hellocat', 'my-other-app']
 
 class HerokuDummyAdapter
   constructor: (opts) ->
-    @app = opts.app
-    @token = opts.token
+    @environments = opts.environments
     @messages = {
       genericError: "whoa! there was an unknown error at Heroku side. rlly srry"
       accessDenied: "seems I'm not allowed to go into #{@app}! srry",
       appDoesntExists: "wait! there's no '#{@app}' app hosted at Heroku!"
     }
 
-  checkAccess: (cb) ->
-    if @token == HEROKU_TOKEN
+  checkAccess: (env, cb) ->
+    env = @environments[env]
+    if env.token == HEROKU_TOKEN
       cb(true)
     else
       cb(false, @messages.accessDenied)
 
-  appExists: (app, cb) ->
-    if app in APPS
+  appExists: (env, cb) ->
+    env = @environments[env]
+    if env.app in APPS
       cb(true)
     else
       cb(false, @messages.appDoesntExists)
