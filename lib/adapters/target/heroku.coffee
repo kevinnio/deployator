@@ -48,12 +48,13 @@ class HerokuAdapter
     opts
 
   request: (env, path) ->
+    encodedToken = new Buffer(":#{env.token}").toString('base64')
     {
       hostname: 'api.heroku.com',
       path: path,
       headers: {
         'Accept': 'application/vnd.heroku+json; version=3',
-        'Authorization': "Bearer #{env.token}",
+        'Authorization': encodedToken,
         'User-Agent': 'hubot'
       }
     }
