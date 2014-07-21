@@ -14,9 +14,9 @@ class HerokuAdapter
     env = @environments[env]
     https.get @request(env, "/apps/#{env.app}"), (res) =>
       switch res.statusCode
-        when 200
+        when 200 # OK
           cb true
-        when 401
+        when 401 # Unauthorized
           cb false, @messages.accessDenied
         else
           cb false, @messages.genericError
@@ -25,9 +25,9 @@ class HerokuAdapter
     env = @environments[env]
     https.get @request(env, "/apps/#{env.app}"), (res) =>
       switch res.statusCode
-        when 200
+        when 200 # OK
           cb true
-        when 404
+        when 404 # Not Found
           cb false, @messages.appDoesntExists
         else
           cb false, @messages.genericError

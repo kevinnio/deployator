@@ -10,7 +10,8 @@ class GithubAdapter
       noUserAccess: "seems I'm not allowed to access #{@user} GitHub account. srry",
       noRepoAccess: "seems I'm not allowed to access to GitHub repo #{@repo}. srry",
       noBranch1: "whoa! there's no branch '",
-      noBranch2: "' at #{@repo} repo!"
+      noBranch2: "' at #{@repo} repo!",
+      noTarballURL: "sorry but I can't get the tarball url for branch"
     }
 
   checkAccess: (cb) ->
@@ -21,9 +22,9 @@ class GithubAdapter
     path = "/repos/#{@user}/#{@repo}/git/refs/heads/#{branch}"
     https.get @request(path), (res) =>
       switch res.statusCode
-        when 200
+        when 200 # OK
           cb true
-        when 401
+        when 404 # Not Found
           cb false, "#{@messages.noBranch1} #{branch} #{@messages.noBranch2}"
         else
           cb false, @messages.genericError
@@ -32,12 +33,10 @@ class GithubAdapter
     path = "/repos/#{@user}/#{@repo}/tarball/#{branch}"
     https.get @request(path), (res) =>
       switch res.statusCode
-        when 302
+        when 302 # Found
           cb res.headers.location
-        when 401
-          cb false, "#{@messages.noBranch1} #{branch} #{@messages.noBranch2}"
         else
-          cb false, @messages.genericError
+          cb false, "#{@messages.genericError} '#{branch}'"
 
   # --------------------------- #
   # Private methods             #
@@ -46,9 +45,9 @@ class GithubAdapter
   checkUserAccess: (cb) ->
     https.get @request('/user'), (res) =>
       switch res.statusCode
-        when 200
+        when 200 # OK
           cb true
-        when 401
+        when 401 # Unauthorized
           cb false, @messages.noUserAccess
         else
           cb false, @messages.genericError
@@ -56,9 +55,9 @@ class GithubAdapter
   checkRepoAccess: (cb) ->
     https.get @request("/repos/#{@user}/#{@repo}"), (res) =>
       switch res.statusCode
-        when 200
+        when 200 # OK
           cb true
-        when 401
+        when 401 # Unauthorized
           cb false, @messages.noRepoAccess
         else
           cb false, @messages.genericError
