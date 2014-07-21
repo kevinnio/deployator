@@ -2,6 +2,7 @@ https = require 'https'
 
 class HerokuAdapter
   constructor: (opts) ->
+    console.log opts
     @environments = opts.environments
     @messages = {
       genericError: "whoa! there was an unknown error at Heroku side. rlly srry"
@@ -9,8 +10,9 @@ class HerokuAdapter
       appDoesntExists: "wait! there's no '#{@app}' app hosted at Heroku!"
     }
 
-  checkAccess: (cb) ->
-    https.get @request("/apps/#{@app}"), (res) =>
+  checkAccess: (env, cb) ->
+    env = @environments[env]
+    https.get @request(env, "/apps/#{env.app}"), (res) =>
       switch res.statusCode
         when 200
           cb true
@@ -19,8 +21,9 @@ class HerokuAdapter
         else
           cb false, @messages.genericError
 
-  appExists: (app, cb) ->
-    https.get @request("/apps/#{app}"), (res) =>
+  appExists: (env, cb) ->
+    env = @environments[env]
+    https.get @request(env, "/apps/#{env.app}"), (res) =>
       switch res.statusCode
         when 200
           cb true
@@ -29,13 +32,13 @@ class HerokuAdapter
         else
           cb false, @messages.genericError
 
-  request: (path) ->
+  request: (env, path) ->
     {
       hostname: 'api.heroku.com',
       path: path,
       headers: {
         'Accept': 'application/vnd.heroku+json; version=3',
-        'Authorization': "Bearer #{@token}",
+        'Authorization': "Bearer #{env.token}",
         'User-Agent': 'hubot'
       }
     }
