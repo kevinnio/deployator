@@ -1,4 +1,4 @@
-GithubAdapter = require '../../../lib/adapters/github'
+GithubDummyAdapter = require '../../../../lib/adapters/origin/github_dummy'
 
 options = {
   user: 'kevindperezm',
@@ -10,10 +10,20 @@ badOptions = {
   repo: 'hellocat',
   token: 'fakeToken'
 }
-adapter = new GithubAdapter(options)
-badAdapter = new GithubAdapter(badOptions)
+adapter = new GithubDummyAdapter(options)
+badAdapter = new GithubDummyAdapter(badOptions)
 
-describe 'The Github adapter', ->
+describe 'The Github dummy adapter', ->
+  describe 'fulfills an origin adapter definition', ->
+    it 'has a checkAccess method', ->
+      expect(adapter.checkAccess).toBeDefined()
+
+    it 'has a branchExists method', ->
+      expect(adapter.branchExists).toBeDefined()
+
+    it 'has a getTarballURL method', ->
+    expect(adapter.getTarballURL).toBeDefined()
+
   describe 'checks correctly for', ->
     it 'github user access', (done) ->
       adapter.checkUserAccess (access, err) ->

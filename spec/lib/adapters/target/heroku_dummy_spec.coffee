@@ -1,4 +1,4 @@
-HerokuAdapter = require '../../../lib/adapters/heroku'
+HerokuAdapter = require '../../../../lib/adapters/target/heroku_dummy'
 options = {
   app: 'hellocat',
   token: 'fc87fa24-4d8d-4073-94ca-4c0d09649e75'
@@ -10,7 +10,17 @@ badOptions = {
 adapter = new HerokuAdapter(options)
 badAdapter = new HerokuAdapter(badOptions)
 
-describe 'The Heroku adapter', ->
+describe 'The Heroku dummy adapter', ->
+  describe 'fulfills a target adapter definition', ->
+    it 'has a checkAccess method', ->
+      expect(adapter.checkAccess).toBeDefined()
+
+    it 'has a appExists method', ->
+      expect(adapter.appExists).toBeDefined()
+
+    it 'has a requestBuild method', ->
+      expect(adapter.requestBuild).toBeDefined()
+
   describe 'checks correctly for', ->
     it 'heroku app access', (done) ->
       adapter.checkAccess (access, err) ->
