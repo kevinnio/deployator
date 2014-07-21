@@ -28,8 +28,16 @@ class GithubAdapter
         else
           cb false, @messages.genericError
 
-  getTarballURL: (cb) ->
-    cb('http://some-tarball-url.com')
+  getTarballURL: (branch, cb) ->
+    path = "/repos/#{@user}/#{@repo}/tarball/#{branch}"
+    https.get @request(path), (res) =>
+      switch res.statusCode
+        when 302
+          cb res.headers.location
+        when 401
+          cb false, "#{@messages.noBranch1} #{branch} #{@messages.noBranch2}"
+        else
+          cb false, @messages.genericError
 
   # --------------------------- #
   # Private methods             #

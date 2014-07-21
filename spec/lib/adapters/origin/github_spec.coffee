@@ -60,3 +60,11 @@ describe 'The Github adapter', ->
         expect(exists).toBe false
         expect(err).toBeTruthy()
         done()
+
+  it "can get the URL of a repo's branch tarball", (done) ->
+    adapter.getTarballURL 'add-cool-feature', (url, err) ->
+      expectedUrl = 'https://codeload.github.com/' +
+                    'kevindperezm/hellocat/legacy.tar.gz' +
+                    '/add-cool-feature'
+      expect(url).toEqual expectedUrl
+      done()
