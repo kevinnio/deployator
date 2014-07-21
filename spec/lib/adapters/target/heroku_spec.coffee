@@ -24,8 +24,8 @@ describe 'The Heroku adapter', ->
     it 'has a appExists method', ->
       expect(adapter.appExists).toBeDefined()
 
-    it 'has a requestBuild method', ->
-      expect(adapter.requestBuild).toBeDefined()
+    it 'has a deploy method', ->
+      expect(adapter.deploy).toBeDefined()
 
   describe 'checks correctly for', ->
     it 'heroku app access', (done) ->
@@ -52,4 +52,12 @@ describe 'The Heroku adapter', ->
         expect(exists).toBe false
         expect(err).toBeTruthy()
         done()
+
+  it 'deploys correctly to heroku from a tarball', (done) ->
+    tarballURL = 'https://codeload.github.com/' +
+                    'kevindperezm/hellocat/legacy.tar.gz' +
+                    '/add-cool-feature'
+    adapter.deploy 'production', tarballURL, (success, err) ->
+      expect(success).toBe true
+      done()
 
