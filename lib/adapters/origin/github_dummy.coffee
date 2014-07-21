@@ -16,7 +16,24 @@ class GithubDummyAdapter
       noBranch2: "at #{@repo} repo!"
     }
 
-  checkUserAccess: (cb) ->
+  checkAccess: (cb) ->
+    @checkUserAccess =>
+      @checkRepoAccess cb
+
+  branchExists: (branch, cb) ->
+    if branch in BRANCHES
+      cb(true)
+    else
+      cb(false, "#{@messages.noBranch1} '#{branch}' #{@messages.noBranch2}")
+
+  getTarballURL: (cb) ->
+    cb('http://some-tarball-url.com')
+
+# --------------------------- #
+# Private methods             #
+# --------------------------- #
+
+   checkUserAccess: (cb) ->
     if @token == GITHUB_TOKEN
       cb(true)
     else
@@ -27,12 +44,6 @@ class GithubDummyAdapter
       cb(true)
     else
       cb(false, @messages.noUserAccess)
-        
-  branchExists: (branch, cb) ->
-    if branch in BRANCHES
-      cb(true)
-    else
-      cb(false, "#{@messages.noBranch1} '#{branch}' #{@messages.noBranch2}")
 
 # ------------------------- #
 
