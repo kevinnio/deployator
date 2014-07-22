@@ -15,6 +15,7 @@ module.exports = (robot) ->
       user: deploymentPayload.notify.user
     })
     console.log deployments
+    res.end()
 
   robot.router.post '/deploy-status/heroku', (req, res) ->
     console.log 'Heroku notifies about deploy success'
@@ -27,6 +28,7 @@ module.exports = (robot) ->
       robot.messageRoom dep.room, "#{dep.user}: Deployment of #{dep.name} done!"
     else
       console.log 'No deployment found'
+    res.end()
 
 
 findLastDeploymentOf = (name) ->
