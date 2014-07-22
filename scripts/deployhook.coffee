@@ -26,6 +26,7 @@ module.exports = (robot) ->
       console.log 'Deployment found'
       console.log dep
       robot.messageRoom dep.room, "#{dep.user}: Deployment of #{dep.name} done!"
+      deleteDeployment dep
     else
       console.log 'No deployment found'
     res.end()
@@ -34,3 +35,6 @@ module.exports = (robot) ->
 findLastDeploymentOf = (name) ->
   for i in [deployments.length - 1..0] by -1
     return deployments[i] if deployments[i].name == name
+
+deleteDeployment = (deployment) ->
+  delete deployments[ deployments.indexOf(deployment) ]
