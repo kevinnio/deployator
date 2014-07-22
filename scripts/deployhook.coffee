@@ -7,5 +7,5 @@ deployments = []
 module.exports = (robot) ->
   robot.router.post '/deploy-status/github', (req, res) ->
     console.log 'Github has notified a deployment status change'
-    deployments.push req.body.payload.notify
+    deployments.push req.body.payload
     console.log deployments
