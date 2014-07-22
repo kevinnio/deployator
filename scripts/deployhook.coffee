@@ -18,5 +18,17 @@ module.exports = (robot) ->
 
   robot.router.post '/deploy-status/heroku', (req, res) ->
     console.log 'Heroku notifies about deploy success'
-    payload = req.body
-    console.log payload
+    app = req.body.app
+    url = req.body.url
+    dep = findLastDeploymentOf app
+    if dep
+      console.log 'Deployment found'
+      console.log dep
+      robot.messageRoom dep.room, "#{dep.user}: Deployment of #{dep.name} done!"
+    else
+      console.log 'No deployment found'
+
+
+findLastDeploymentOf = (name) ->
+  for i in [deployments.length..0] by -1
+    return deployments[i] if deployments[i].name == name
