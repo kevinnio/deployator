@@ -3,6 +3,6 @@
 #
 
 module.exports = (robot) ->
-  robot.router.post '/hubot/deploy_status', (req, res) ->
+  robot.router.post '/deploy-status', (req, res) ->
     console.log req.body
 
