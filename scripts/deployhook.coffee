@@ -19,6 +19,7 @@ module.exports = (robot) ->
 
   robot.router.post '/deploy-status/heroku', (req, res) ->
     console.log 'Heroku notifies about deploy success'
+    console.log req.body
     app = req.body.app
     url = req.body.url
     dep = findLastDeploymentOf app
