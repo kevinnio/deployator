@@ -32,5 +32,5 @@ module.exports = (robot) ->
 
 
 findLastDeploymentOf = (name) ->
-  for i in [deployments.length..0] by -1
+  for i in [deployments.length - 1..0] by -1
     return deployments[i] if deployments[i].name == name
