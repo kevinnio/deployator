@@ -18,5 +18,5 @@ module.exports = (robot) ->
 
   robot.router.post '/deploy-status/heroku', (req, res) ->
     console.log 'Heroku notifies about deploy success'
-    payload = JSON.parse req.body.payload
+    payload = req.body.payload
     console.log payload
