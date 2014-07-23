@@ -7,7 +7,7 @@ deployments = []
 module.exports = (robot) ->
   robot.router.post '/deploy-status/github', (req, res) ->
     console.log 'Github has notified a deployment'
-    payload = JSON.parse req.body.payload
+    payload = JSON.parse(req.body.payload).payload
     console.log payload
     console.log deployments
     res.end()
