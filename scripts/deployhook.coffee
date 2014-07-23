@@ -14,12 +14,7 @@ module.exports = (robot) ->
       room: deploymentPayload.notify.room,
       user: deploymentPayload.notify.user
     }
-    deployments.push(dep)
-    setTimeout ->
-      if dep in deployments
-        robot.messageRoom dep.room, "#{dep.user}: Seems that deploy of #{dep.name} has failed..."
-        deleteDeployment dep
-    , minutes(15)
+    addDeployment dep, robot
     console.log deployments
     res.end()
 
@@ -38,6 +33,20 @@ module.exports = (robot) ->
       console.log 'No deployment found'
     res.end()
 
+
+addDeployment = (dep, robot) ->
+  setErrorTimeout(dep, robot)
+  deployments.push(dep)
+
+setErrorTimeout = (dep, robot) ->
+  setTimeout(->
+    if dep in deployments
+      robot.messageRoom(
+        dep.room,
+        "#{dep.user}: Seems that deploy of #{dep.name} has failed..."
+      )
+      deleteDeployment dep
+  , minutes(15))
 
 minutes = (quantity) ->
   quantity * 1000 * 60
