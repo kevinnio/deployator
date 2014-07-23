@@ -3,6 +3,7 @@
 #
 
 deployments = []
+deployment_timeout = process.env.HUBOT_DEPLOY_TIMEOUT
 
 module.exports = (robot) ->
   robot.router.post '/deploy-status/github', (req, res) ->
@@ -42,7 +43,7 @@ addDeployment = (dep, robot) ->
   deployments.push(dep)
 
 setErrorTimeout = (dep, robot) ->
-  setTimeout (-> errorTimeout(dep, robot)), minutes(15)
+  setTimeout (-> errorTimeout(dep, robot)), minutes(deployment_timeout)
 
 errorTimeout = (dep, robot) ->
   if dep in deployments
