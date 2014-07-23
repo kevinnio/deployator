@@ -46,6 +46,8 @@ setErrorTimeout = (dep, robot) ->
 
 errorTimeout = (dep, robot) ->
   if dep in deployments
+    console.log "Heroku never notified about a deployment of #{dep.name}"
+    console.log "Deployment of #{dep.name} failed"
     robot.messageRoom(
       dep.room,
       "#{dep.user}: Seems that deploy of #{dep.name} has failed..."
