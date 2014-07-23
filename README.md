@@ -1,10 +1,10 @@
 # Deployator - a deploy-capable Hubot
 
 This is a customized version of Hubot, enhanced to do automatic deployment from 
-GitHub to Heroku with just sending a chat message from your company's Slack.
+GitHub to Heroku with just sending a chat message from your company's Slack team.
 It's easy to use. Just deploy the bot, configure it and you're done!
 
-## If you deploy your bot at Heroku
+## If you deploy your bot to Heroku
 
 By default, Heroku is going to idle your bot after a while of inactivity. That will make impossible for your bot to stay aware of your team chat activity and GitHub/Heroku responses. Set this env vars to make your bot rockin' all day!
 
