@@ -12,7 +12,7 @@ By default, Heroku is going to idle your bot after a while of inactivity. That w
 
 ## Configure
 
-This bot integrates services from different providers by using theirs web API.
+This bot integrates services from different providers by using their web API.
 So, in order for this bot to work, you have to do some things at your bot's side
 and at each service's side.
 
@@ -35,7 +35,7 @@ To setup this integration:
 
 #### Bot's side
 
-The bot needs some environment vars in order to access your company's Slack channels.
+Your bot will need some environment vars in order to access your company's Slack channels.
 
 * <b>HUBOT_SLACK_BOTNAME</b>: Your bot's name. Your bot is going to respond to this name.
 * <b>HUBOT_SLACK_TEAM</b>: The team the bot will join. Usually, it's the domain of your company's Slack (e.g. for <i>http://mycompany.slack.com</i>, this var has to be setted to <i>mycompany</i>).
@@ -51,7 +51,7 @@ When you send a deploy command, your bot is going to deliver a deployment reques
 
 To make GitHub notify your bot when a deployment event has fired on a repo, you have to add a GitHub webhook to your repo, indicating the url where your bot is deployed. For convenience, run the command below. Make sure you replace the brackets with your data. btw, the GitHub token here has to have <i>repo</i> and <i>gists</i> scope, preferably.
 
-`curl https://api.github.com/hub -F "hub.mode=subscribe" -F "hub.topic=https://github.com/[owner]/[repo]/events/deployment" -F "hub.callback=[url_to_my_bot]" -H "Authorization: token [github_token]" -v`
+    curl https://api.github.com/hub -F "hub.mode=subscribe" -F "hub.topic=https://github.com/[owner]/[repo]/events/deployment" -F "hub.callback=[url_to_my_bot]" -H "Authorization: token [github_token]" -v`
 
 If you got a `200 OK` status code in the response, you're on fire. If this method doesn't work for some reason, you can always do it manual in your repo's settings.
 
@@ -82,6 +82,12 @@ Lastly, you have to make Heroku notify your bot when a successful deployment is 
 #### Bot's side
 
 You don't need to do anything at bot's side for Heroku integration.
+
+### Additional config
+
+Here are some additional env vars that let you change the behaviour of your bot.
+
+* <b>HUBOT_DEPLOY_TIMEOUT</b>: Time to wait for a successful deployment notification from Heroku in minutes. This includes the time needed to transport and build your app. Defaults to 15.
 
 ## Notices
 
