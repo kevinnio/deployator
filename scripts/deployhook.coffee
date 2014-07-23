@@ -3,7 +3,7 @@
 #
 
 deployments = []
-deployment_timeout = process.env.HUBOT_DEPLOY_TIMEOUT
+deployment_timeout = process.env.HUBOT_DEPLOY_TIMEOUT || 15
 
 module.exports = (robot) ->
   robot.router.post '/deploy-status/github', (req, res) ->
