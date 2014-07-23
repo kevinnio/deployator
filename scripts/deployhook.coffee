@@ -7,11 +7,11 @@ deployments = []
 module.exports = (robot) ->
   robot.router.post '/deploy-status/github', (req, res) ->
     console.log 'Github has notified a deployment'
-    deploymentPayload = req.payload.payload
+    payload = req.payload
     dep = {
-      name: deploymentPayload.name,
-      room: deploymentPayload.notify.room,
-      user: deploymentPayload.notify.user
+      name: payload.name,
+      room: payload.notify.room,
+      user: payload.notify.user
     }
     addDeployment dep, robot
     console.log deployments
