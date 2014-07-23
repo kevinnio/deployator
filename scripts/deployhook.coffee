@@ -23,11 +23,14 @@ addDeploymentToQueue = (payload, robot) ->
 
 notifyDeploymentSuccess = (app, robot) ->
   console.log 'Heroku notifies about deployment success'
-  dep = findLastDeploymentOf app
-  if dep
-    console.log "Matching deployment found: Deployment of #{dep.name}"
-    robot.messageRoom dep.room, "#{dep.user}: Deployment of #{dep.name} done!"
-    deleteDeployment dep
+  deployment = findLastDeploymentOf app
+  if deployment
+    console.log "Matching deployment found: Deployment of #{deployment.name}"
+    robot.messageRoom(
+      dep.room,
+      "#{deployment.user}: Deployment of #{deployment.name} done!"
+    )
+    deleteDeployment deployment
   else
     console.log 'No matching deployment found'
 
@@ -38,22 +41,22 @@ buildDeployment = (payload) ->
     user: payload.notify.user
   }
 
-addDeployment = (dep, robot) ->
-  setErrorTimeout(dep, robot)
-  deployments.push(dep)
+addDeployment = (deployment, robot) ->
+  setErrorTimeout(deployment, robot)
+  deployments.push(deployment)
 
-setErrorTimeout = (dep, robot) ->
-  setTimeout (-> errorTimeout(dep, robot)), minutes(deployment_timeout)
+setErrorTimeout = (deployment, robot) ->
+  setTimeout (-> errorTimeout(deployment, robot)), minutes(deployment_timeout)
 
-errorTimeout = (dep, robot) ->
-  if dep in deployments
-    console.log "Heroku never notified about a deployment of #{dep.name}"
-    console.log "Deployment of #{dep.name} failed"
+errorTimeout = (deployment, robot) ->
+  if deployment in deployments
+    console.log "Heroku never notified about a deployment of #{deployment.name}"
+    console.log "Deployment of #{deployment.name} failed"
     robot.messageRoom(
       dep.room,
-      "#{dep.user}: Seems that deploy of #{dep.name} has failed..."
+      "#{deployment.user}: Seems that deploy of #{deployment.name} has failed..."
     )
-    deleteDeployment dep
+    deleteDeployment deployment
 
 minutes = (quantity) ->
   quantity * 1000 * 60
