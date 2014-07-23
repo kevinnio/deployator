@@ -9,11 +9,16 @@ module.exports = (robot) ->
     console.log 'Github has notified a deployment status change'
     payload = JSON.parse req.body.payload
     deploymentPayload = payload.deployment.payload
-    deployments.push({
+    dep = {
       name: deploymentPayload.name,
       room: deploymentPayload.notify.room,
       user: deploymentPayload.notify.user
-    })
+    }
+    deployments.push(dep)
+    setTimeout ->
+      robot.messageRoom dep.room, "#{dep.user}: Seems that deploy of #{dep.name} has failed..."
+      deleteDeployment dep
+    , minutes(15)
     console.log deployments
     res.end()
 
@@ -32,6 +37,9 @@ module.exports = (robot) ->
       console.log 'No deployment found'
     res.end()
 
+
+minutes = (quantity) ->
+  quantity * 1000 * 60
 
 findLastDeploymentOf = (name) ->
   for deployment in deployments
