@@ -15,16 +15,13 @@ module.exports = (robot) ->
   robot.router.post '/deploy-status/heroku', (req, res) ->
     console.log 'Heroku notifies about deploy success'
     console.log req.body
-    app = req.body.app
-    url = req.body.url
-    dep = findLastDeploymentOf app
+    dep = findLastDeploymentOf(req.body.app)
     if dep
-      console.log 'Deployment found'
-      console.log dep
+      console.log 'Matching deployment found'
       robot.messageRoom dep.room, "#{dep.user}: Deployment of #{dep.name} done!"
       deleteDeployment dep
     else
-      console.log 'No deployment found'
+      console.log 'No matching deployment found'
     res.end()
 
 
@@ -40,14 +37,15 @@ addDeployment = (dep, robot) ->
   deployments.push(dep)
 
 setErrorTimeout = (dep, robot) ->
-  setTimeout(->
-    if dep in deployments
-      robot.messageRoom(
-        dep.room,
-        "#{dep.user}: Seems that deploy of #{dep.name} has failed..."
-      )
-      deleteDeployment dep
-  , minutes(15))
+  setTimeout (-> errorTimeout(dep, robot)), minutes(15)
+
+errorTimeout = (dep, robot) ->
+  if dep in deployments
+    robot.messageRoom(
+      dep.room,
+      "#{dep.user}: Seems that deploy of #{dep.name} has failed..."
+    )
+    deleteDeployment dep
 
 minutes = (quantity) ->
   quantity * 1000 * 60
