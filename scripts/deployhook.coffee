@@ -54,7 +54,8 @@ errorTimeout = (deployment, robot) ->
     console.log "Deployment of #{deployment.name} failed"
     robot.messageRoom(
       deployment.room,
-      "#{deployment.user}: Seems that deploy of #{deployment.name} has failed..."
+      "#{deployment.user}: " +
+      "Seems that your deploy of #{deployment.name} has failed..."
     )
     deleteDeployment deployment
 
