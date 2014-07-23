@@ -8,12 +8,7 @@ module.exports = (robot) ->
   robot.router.post '/deploy-status/github', (req, res) ->
     console.log 'Github has notified a deployment'
     payload = JSON.parse(req.body.payload).payload
-    dep = {
-      name: payload.name,
-      room: payload.notify.room,
-      user: payload.notify.user
-    }
-    addDeployment dep, robot
+    addDeployment buildDeployment(payload), robot
     console.log deployments
     res.end()
 
@@ -32,6 +27,13 @@ module.exports = (robot) ->
       console.log 'No deployment found'
     res.end()
 
+
+buildDeployment = (payload) ->
+  {
+    name: payload.name,
+    room: payload.notify.room,
+    user: payload.notify.user
+  }
 
 addDeployment = (dep, robot) ->
   setErrorTimeout(dep, robot)
