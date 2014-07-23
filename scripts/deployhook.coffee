@@ -27,7 +27,7 @@ notifyDeploymentSuccess = (app, robot) ->
   if deployment
     console.log "Matching deployment found: Deployment of #{deployment.name}"
     robot.messageRoom(
-      dep.room,
+      deployment.room,
       "#{deployment.user}: Deployment of #{deployment.name} done!"
     )
     deleteDeployment deployment
@@ -53,7 +53,7 @@ errorTimeout = (deployment, robot) ->
     console.log "Heroku never notified about a deployment of #{deployment.name}"
     console.log "Deployment of #{deployment.name} failed"
     robot.messageRoom(
-      dep.room,
+      deployment.room,
       "#{deployment.user}: Seems that deploy of #{deployment.name} has failed..."
     )
     deleteDeployment deployment
