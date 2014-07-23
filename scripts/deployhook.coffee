@@ -16,8 +16,9 @@ module.exports = (robot) ->
     }
     deployments.push(dep)
     setTimeout ->
-      robot.messageRoom dep.room, "#{dep.user}: Seems that deploy of #{dep.name} has failed..."
-      deleteDeployment dep
+      if dep in deployments
+        robot.messageRoom dep.room, "#{dep.user}: Seems that deploy of #{dep.name} has failed..."
+        deleteDeployment dep
     , minutes(15)
     console.log deployments
     res.end()
