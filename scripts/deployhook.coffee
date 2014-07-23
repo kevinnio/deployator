@@ -7,23 +7,28 @@ deployments = []
 module.exports = (robot) ->
   robot.router.post '/deploy-status/github', (req, res) ->
     res.end()
-    console.log 'Github has notified a deployment'
-    payload = JSON.parse(req.body.payload).payload
-    addDeployment buildDeployment(payload), robot
-    console.log deployments
+    addDeploymentToQueue JSON.parse(req.body.payload), robot
 
   robot.router.post '/deploy-status/heroku', (req, res) ->
     res.end()
-    console.log 'Heroku notifies about deploy success'
-    console.log req.body
-    dep = findLastDeploymentOf(req.body.app)
-    if dep
-      console.log 'Matching deployment found'
-      robot.messageRoom dep.room, "#{dep.user}: Deployment of #{dep.name} done!"
-      deleteDeployment dep
-    else
-      console.log 'No matching deployment found'
+    notifyDeploymentSuccess(req.body.app, robot)
 
+
+addDeploymentToQueue = (payload, robot) ->
+  payload = payload.payload
+  deployment = buildDeployment(payload)
+  addDeployment(deployment, robot)
+  console.log "Github has notified a deployment of #{deployment.name}"
+
+notifyDeploymentSuccess = (app, robot) ->
+  console.log 'Heroku notifies about deployment success'
+  dep = findLastDeploymentOf app
+  if dep
+    console.log "Matching deployment found: Deployment of #{dep.name}"
+    robot.messageRoom dep.room, "#{dep.user}: Deployment of #{dep.name} done!"
+    deleteDeployment dep
+  else
+    console.log 'No matching deployment found'
 
 buildDeployment = (payload) ->
   {
