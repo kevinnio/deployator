@@ -46,4 +46,5 @@ findLastDeploymentOf = (name) ->
     return deployment if deployment.name == name
 
 deleteDeployment = (deployment) ->
-  delete deployments[ deployments.indexOf(deployment) ]
+  index = deployments.indexOf(deployment)
+  delete deployments[index] if index >= 0
