@@ -51,7 +51,7 @@ When you send a deploy command, your bot is going to deliver a deployment reques
 
 To make GitHub notify your bot when a deployment event has fired on a repo, you have to add a GitHub webhook to your repo, indicating the url where your bot is deployed. For convenience, run the command below. Make sure you replace the brackets with your data. btw, the GitHub token here has to have <i>repo</i> and <i>gists</i> scope, preferably.
 
-    curl https://api.github.com/hub -F "hub.mode=subscribe" -F "hub.topic=https://github.com/[owner]/[repo]/events/deployment" -F "hub.callback=[url_to_my_bot]" -H "Authorization: token [github_token]" -v`
+    curl https://api.github.com/hub -F "hub.mode=subscribe" -F "hub.topic=https://github.com/[owner]/[repo]/events/deployment" -F "hub.callback=[url_to_my_bot]/deploy-status/github" -H "Authorization: token [github_token]" -v`
 
 If you got a `200 OK` status code in the response, you're on fire. If this method doesn't work for some reason, you can always do it manual in your repo's settings.
 
@@ -77,7 +77,7 @@ Lastly, you have to make Heroku notify your bot when a successful deployment is 
 
 #### Service's side
 
-1. Add the `deployhooks:http` addon to your Heroku app. You have to pass info about where Heroku is going to send a post request after a successful deployment. The easiest way is using the Heroku Toolbelt: `heroku addons:add deployhooks:http --url=[url_to_my_bot] --app [my_app_name]`
+1. Add the `deployhooks:http` addon to your Heroku app. You have to pass info about where Heroku is going to send a post request after a successful deployment. The easiest way is using the Heroku Toolbelt: `heroku addons:add deployhooks:http --url="[url_to_my_bot]/deploy-status/heroku" --app [my_app_name]`
 
 #### Bot's side
 
