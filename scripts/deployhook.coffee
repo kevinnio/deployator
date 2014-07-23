@@ -34,8 +34,8 @@ module.exports = (robot) ->
 
 
 findLastDeploymentOf = (name) ->
-  for i in [deployments.length - 1..0] by -1
-    return deployments[i] if deployments[i].name == name
+  for deployment in deployments
+    return deployment if deployment.name == name
 
 deleteDeployment = (deployment) ->
   delete deployments[ deployments.indexOf(deployment) ]
