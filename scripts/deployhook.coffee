@@ -6,13 +6,14 @@ deployments = []
 
 module.exports = (robot) ->
   robot.router.post '/deploy-status/github', (req, res) ->
+    res.end()
     console.log 'Github has notified a deployment'
     payload = JSON.parse(req.body.payload).payload
     addDeployment buildDeployment(payload), robot
     console.log deployments
-    res.end()
 
   robot.router.post '/deploy-status/heroku', (req, res) ->
+    res.end()
     console.log 'Heroku notifies about deploy success'
     console.log req.body
     dep = findLastDeploymentOf(req.body.app)
@@ -22,7 +23,6 @@ module.exports = (robot) ->
       deleteDeployment dep
     else
       console.log 'No matching deployment found'
-    res.end()
 
 
 buildDeployment = (payload) ->
