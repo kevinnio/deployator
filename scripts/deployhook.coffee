@@ -28,7 +28,7 @@ notifyDeploymentSuccess = (app, robot) ->
     console.log "Matching deployment found: Deployment of #{deployment.name}"
     robot.messageRoom(
       deployment.room,
-      "#{deployment.user}: Your deploy of #{deployment.name} done!"
+      "#{deployment.user}: Your deployment of #{deployment.name} is done!"
     )
     deleteDeployment deployment
   else
